@@ -207,6 +207,16 @@ def about(request):
     return render(request,'about.html', context) 
 
 
+def saham_detail(request, symbol):
+    saham = get_object_or_404(Saham, symbol=symbol.upper())
+    
+
+    context = {
+        'saham': saham,
+    }
+    return render(request, 'home/saham_detail.html', context)
+
+
 def loginView(request):
     context = {
         'title': 'Login',

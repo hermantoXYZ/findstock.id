@@ -88,7 +88,17 @@ class Saham(models.Model):
     last_price = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     price_change = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
     percent_change = models.FloatField(null=True, blank=True)
+    previous_close = models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True)
+
+    market_cap = models.BigIntegerField(null=True, blank=True)
+    volume = models.BigIntegerField(null=True, blank=True)
+    pe_ratio = models.FloatField(null=True, blank=True)
+    eps = models.FloatField(null=True, blank=True)
+    dividend_yield = models.FloatField(null=True, blank=True)
+    beta = models.FloatField(null=True, blank=True)
     last_updated = models.DateTimeField(null=True, blank=True)
+    last_fundamental_update = models.DateTimeField(null=True, blank=True)
+
 
     class Meta:
         verbose_name = "Saham"

@@ -1,0 +1,338 @@
+{% extends 'home/base.html' %}
+{% block title %}{{ saham.symbol }} - FindStock{% endblock %}
+{% block description %}{{ article.excerpt }}{% endblock %}
+{% block meta %}<meta name="description" content="{{ article.content|striptags|truncatechars:160 }}">
+    <meta name="keywords" content="Tegas, Cepat, Berimbang, Berita Makassar, Berita Indonesia, {{ article.category }}, Makassar terkini, berita terbaru {{ article.category }}">
+    <meta name="author" content="LosariPost">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="google" content="notranslate">
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:title" content="{{ article.title }} - {{ web_title }}">
+    <meta property="og:description" content="{{ article.content|striptags|truncatechars:160 }}">
+    <meta property="og:image" content="https://losaripost.com{{ article.featured_image.url }}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="news">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ article.title }} - {{ web_title }}">
+    <meta name="twitter:description" content="{{ article.content|striptags|truncatechars:160 }}">
+    <meta name="twitter:image" content="https://losaripost.com{{ article.featured_image.url }}">
+{% endblock %}
+{% block content %}
+        <main class="hero-section">
+        <div class="ticker-container">
+            <div class="ticker-item down">
+                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Bitcoin (BTC / IDR)</span>
+                    <span class="ticker-price">1,544,931,905.60</span>
+                </div>
+                <div class="ticker-change">
+                    <span class="percent">-0.67%</span>
+                    <span class="value">-10,449,363.90</span>
+                </div>
+            </div>
+            <div class="ticker-item down">
+                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Ether (ETH / IDR)</span>
+                    <span class="ticker-price">51,988,153.03</span>
+                </div>
+                <div class="ticker-change">
+                    <span class="percent">-0.0092%</span>
+                    <span class="value">-269,204.68</span>
+                </div>
+            </div>
+            <div class="ticker-item up">
+                <div class="ticker-arrow"><i class="fas fa-arrow-up"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Solana (SOL / IDR)</span>
+                    <span class="ticker-price">2,361,060.3024</span>
+                </div>
+                <div class="ticker-change">
+                    <span classs="percent">+0.27%</span>
+                    <span class="value">+6,296.2828</span>
+                </div>
+            </div>
+            <div class="ticker-item down">
+                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">XRP (XRP / IDR)</span>
+                    <span class="ticker-price">36,956.7548</span>
+                </div>
+                <div class="ticker-change">
+                    <span class="percent">-0.36%</span>
+                    <span class="value">-132.8669</span>
+                </div>
+            </div>
+            <div class="ticker-item down">
+                 <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Dogecoin (DOGE / IDR)</span>
+                    <span class="ticker-price">2,694.95</span>
+                </div>
+                 <div class="ticker-change">
+                    <span class="percent">-0.45%</span>
+                    <span class="value">-12.21</span>
+                </div>
+            </div>
+        </div>
+    
+        <div class="wave-container"></div>
+
+        <div class="content-area">
+            <div class="main-content">
+            <section class="top-movers">
+            <h2>Saham {{ saham.symbol }}</h2>
+                <div class="mover-item">
+                    <span class="mover-tag">{{ saham.symbol }}</span>
+                    <span class="mover-name">{{ saham.nama_perusahaan }}</span>
+                    <span class="mover-price">{{ saham.last_price|floatformat:2 }}</span>
+                    <span class="mover-change-value">
+                        {% if saham.price_change > 0 %}
+                            <span style="color:green;">{{ saham.price_change|floatformat:2 }}</span>
+                        {% elif saham.price_change < 0 %}
+                            <span style="color:red;">{{ saham.price_change|floatformat:2 }}</span>
+                        {% else %}
+                            Rp{{ saham.price_change|floatformat:2 }}
+                        {% endif %}
+                    </span>
+
+                    <span class="mover-change-percent">
+                        {% if saham.percent_change > 0 %}
+                            <span style="color:green;">
+                                <i class="fas fa-arrow-up"></i> +{{ saham.percent_change|floatformat:2 }}%
+                            </span>
+                        {% elif saham.percent_change < 0 %}
+                            <span style="color:red;">
+                                <i class="fas fa-arrow-down"></i> {{ saham.percent_change|floatformat:2 }}%
+                            </span>
+                        {% else %}
+                            {{ saham.percent_change|floatformat:2 }}%
+                        {% endif %}
+                    </span>
+                    <span class="mover-action"><i class="fas fa-check-circle"></i></span>
+                </div>
+                </section>
+
+            
+    <article class="article-full">
+                    <header class="article-header">
+                <h1 class="long-name">{{ saham.nama_perusahaan }}</h1>
+                <p class="symbol">{{ saham.symbol }} - IDR</p>
+                    </header>
+        <div class="price-section">
+            <h2 class="current-price">{{ saham.last_price|floatformat:2 }}</h2>
+            <p class="change up">{{ saham.price_change|floatformat:2 }} ({{ saham.percent_change|floatformat:2 }}%)</p>
+        </div>
+        <div class="metrics-grid">
+            <div class="metric">
+                <p class="label">Previous Close</p>
+                <p class="value">{{ saham.previous_close|floatformat:2 }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">Open</p>
+                <p class="value">{{ saham.open_price|floatformat:2 }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">Day's Range</p>
+                <p class="value">{{ saham.day_range }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">52 Week Range</p>
+                <p class="value">{{ saham.week_range }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">Volume</p>
+                <p class="value format-idr">{{ saham.volume }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">Market Cap</p>
+                <p class="value format-idr">{{ saham.market_cap }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">P/E Ratio (TTM)</p>
+                <p class="value">{{ saham.pe_ratio }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">EPS (TTM)</p>
+                <p class="value">{{ saham.eps }}</p>
+            </div>
+            <div class="metric">
+                <p class="label">Dividend Yield</p>
+                <p class="value">{{ saham.dividend_yield }}</p>
+            </div>
+        </div>
+
+                </article>
+                <section class="financial-news">
+                    <div class="news-filters">
+                        {% if topics %}
+                        {% for tag in topics %}
+                        <button class="filter-btn active">{{ tag.name }}</button>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="news-list">                        
+                    {% for related in related_articles %}
+                        <article class="news-item">
+                            <div class="news-content">
+                                <div class="news-source">{{ related.category }} • {{ related.created_at|date:'d F Y' }}</div>
+                                <h3><a href="{% url 'article_detail' category_slug=related.category.slug unique_id=related.unique_id slug=related.slug %}">{{ related.title }}</a></h3>
+                            </div>
+                            <img src="{{ related.featured_image.url }}" alt="{{ related.title }}" class="news-image">
+                        </article>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+
+            <aside class="sidebar">
+
+                <div class="sidebar-card">
+                    <h4>Profile Saham {{ saham.symbol }}</h4>
+                    <p class="card-description">
+                        Find the right stock for you by filtering through more than 12,000 stocks on
+                        major global exchanges based on metrics like market cap, dividend yield,
+                        P/E ratio, and more.
+                    </p>
+                    <div class="info-item">
+                    <div class="info-label">
+                        <i class="fa-solid fa-calendar"></i>
+                        <span>FOUNDED</span>
+                    </div>
+                    <div class="info-value">
+                        <span>16 Dec 1895</span>
+                    </div>
+                </div>
+                </div>
+                <div class="sidebar-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie card-icon-blue"></i>
+                        <div class="card-title">
+                            <h4>Your portfolios</h4>
+                            <p>Only you can see this</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-value">Rp0</div>
+                    <div class="portfolio-item">
+                        <span>FronX</span>
+                        <span>Rp0</span>
+                        <span>0.00%</span>
+                    </div>
+                    <button class="btn-new-portfolio"><i class="fas fa-plus"></i> New portfolio</button>
+                </div>
+
+                <div class="sidebar-card">
+                    <h4>Market trends</h4>
+                    <div class="trend-filters">
+                        <button class="filter-chip"><i class="fas fa-chart-line"></i> Market indexes</button>
+                        <button class="filter-chip"><i class="fas fa-poll"></i> Most active</button>
+                        <button class="filter-chip"><i class="fas fa-arrow-up"></i> Gainers</button>
+                        <button class="filter-chip"><i class="fas fa-arrow-down"></i> Losers</button>
+                        <button class="filter-chip"><i class="fas fa-leaf"></i> Climate leaders</button>
+                        <button class="filter-chip"><i class="fas fa-coins"></i> Crypto</button>
+                        <button class="filter-chip"><i class="fas fa-dollar-sign"></i> Currencies</button>
+                    </div>
+                </div>
+                <div class="sidebar-card">
+                    <h4>Most followed on Google</h4>
+                    <div class="followed-stock-list">
+                        <div class="followed-stock-item">
+                            <div class="followed-stock-info">
+                                <span class="stock-ticker-tag aapl">AAPL</span>
+                                <div class="stock-details">
+                                    <h5>Apple Inc</h5>
+                                    <p>3.71M V</p>
+                                </div>
+                            </div>
+                            <div class="followed-stock-action">
+                                <span class="stock-change-tag down"><i class="fas fa-arrow-down"></i> 0.01%</span>
+                                <button class="add-stock-btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="followed-stock-item">
+                            <div class="followed-stock-info">
+                                <span class="stock-ticker-tag googl">BBCA</span>
+                                <div class="stock-details">
+                                    <h5>Alphabet A</h5>
+                                    <p>2.16M v</p>
+                                </div>
+                            </div>
+                            <div class="followed-stock-action">
+                                <span class="stock-change-tag down"><i class="fas fa-arrow-down"></i> 0.26%</span>
+                                <button class="add-stock-btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="followed-stock-item">
+                            <div class="followed-stock-info">
+                                <span class="stock-ticker-tag msft">MSFT</span>
+                                <div class="stock-details">
+                                    <h5>Microsoft Corp</h5>
+                                    <p>1.84M </p>
+                                </div>
+                            </div>
+                            <div class="followed-stock-action">
+                                <span class="stock-change-tag down"><i class="fas fa-arrow-down"></i> 2.70%</span>
+                                <button class="add-stock-btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="followed-stock-item">
+                            <div class="followed-stock-info">
+                                <span class="stock-ticker-tag amzn">AMZN</span>
+                                <div class="stock-details">
+                                    <h5>Amazon.com Inc</h5>
+                                    <p>1.74M </p>
+                                </div>
+                            </div>
+                            <div class="followed-stock-action">
+                                <span class="stock-change-tag down"><i class="fas fa-arrow-down"></i> 4.43%</span>
+                                <button class="add-stock-btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="followed-stock-item">
+                            <div class="followed-stock-info">
+                                <span class="stock-ticker-tag meta">META</span>
+                                <div class="stock-details">
+                                    <h5>Meta Platforms Inc</h5>
+                                    <p>1.58M </p>
+                                </div>
+                            </div>
+                            <div class="followed-stock-action">
+                                <span class="stock-change-tag down"><i class="fas fa-arrow-down"></i> 0.72%</span>
+                                <button class="add-stock-btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="followed-stock-item">
+                            <div class="followed-stock-info">
+                                <span class="stock-ticker-tag tsla">TSLA</span>
+                                <div class="stock-details">
+                                    <h5>Tesla Inc</h5>
+                                    <p>1.49M </p>
+                                </div>
+                            </div>
+                            <div class="followed-stock-action">
+                                <span class="stock-change-tag down"><i class="fas fa-arrow-down"></i> 1.88%</span>
+                                <button class="add-stock-btn"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            
+            </aside>
+        </div>
+    </main>
+<script>
+    document.querySelectorAll('.format-idr').forEach(el => {
+        let number = parseFloat(el.innerText);
+        if (!isNaN(number)) {
+            el.innerText = number.toLocaleString('id-ID', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            });
+        }
+    });
+</script>
+{% endblock %}

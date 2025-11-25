@@ -16,15 +16,37 @@ def get_realtime_prices():
 
     if perlu_update:
         try:
+            # Update harga saham
             update_data_saham_lokal()
+
+            # OPTIONAL: update fundamental hanya 1x per hari
+            one_day_ago = timezone.now() - timedelta(seconds=3000)
+
+            if not saham_sample.last_fundamental_update or saham_sample.last_fundamental_update < one_day_ago:
+                update_fundamental_data()
+                saham_sample.last_fundamental_update = timezone.now()
+                saham_sample.save(update_fields=["last_fundamental_update"])
+
         except Exception as e:
             print(f"⚠️ Gagal update saham: {e}")
 
-    data = Saham.objects.all().values(
-        'symbol', 'nama_perusahaan', 'last_price', 
-        'price_change', 'percent_change', 'sektor'
+    # Data yang dikembalikan untuk frontend (ringan)
+    data = Saham.objects.values(
+        'symbol',
+        'nama_perusahaan',
+        'last_price',
+        'price_change',
+        'percent_change',
+        'sektor',
+        'market_cap',
+        'volume',
+        'pe_ratio',
+        'eps',
+        'dividend_yield',
+        'previous_close'
     )
     return data
+
 
 def update_data_saham_lokal():
     all_saham = Saham.objects.all()
@@ -64,6 +86,7 @@ def update_data_saham_lokal():
                 saham.price_change = change
                 saham.percent_change = pct_change
                 saham.last_updated = timezone.now()
+                saham.previous_close = prev_close
                 
                 updates.append(saham)
                 
@@ -72,5 +95,30 @@ def update_data_saham_lokal():
 
     # Simpan ke DB sekaligus (Bulk Update) agar hemat koneksi
     if updates:
-        Saham.objects.bulk_update(updates, ['last_price', 'price_change', 'percent_change', 'last_updated'])
+        Saham.objects.bulk_update(updates, ['last_price', 'price_change', 'percent_change', 'previous_close', 'last_updated',])
 
+
+
+def update_fundamental_data():
+    all_saham = Saham.objects.all()
+    
+    for saham in all_saham:
+        ticker_symbol = f"{saham.symbol}.JK"
+        ticker = yf.Ticker(ticker_symbol)
+
+        try:
+            info = ticker.info  # ⚠️ kadang lambat, tapi data lengkap
+            
+            # contoh ambil data penting
+            saham.market_cap = info.get("marketCap")
+            saham.volume = info.get("volume") 
+            saham.pe_ratio = info.get("trailingPE")
+            saham.eps = info.get("trailingEps")
+            saham.dividend_yield = info.get("dividendYield") * 100 if info.get("dividendYield") else None
+            saham.beta = info.get("beta")
+            saham.previous_close = info.get("previousClose")
+
+            saham.save()
+
+        except Exception as e:
+            print(f"⚠️ Gagal tarik fundamental {saham.symbol}: {e}")

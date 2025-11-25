@@ -43,7 +43,7 @@ urlpatterns += (
     path('<slug:slug>/', views.category_articles, name='category_articles'),
     path('topic/<slug:slug>/', views.topic_articles, name='topic_articles'),
     path('page/<slug:slug>/', views.page_detail, name='page_detail'),
-
+    path('saham/<str:symbol>/', views.saham_detail, name='saham_detail'),
 )
 
 

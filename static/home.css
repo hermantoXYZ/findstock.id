@@ -205,6 +205,7 @@ section h2 {font-size: 1.5rem;margin-bottom: 1.5rem;text-align: left;}
 .sidebar-card h4 {font-size: 1.1rem;margin-bottom: 0.25rem;text-align: left;}
 .sidebar-card .card-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
 .sidebar-card .card-header p { font-size: 0.8rem; color: var(--text-light); }
+.sidebar-card .card-description { font-size: 0.9rem; color: var(--text-dark); margin-bottom: 1rem; text-align: left; }
 .card-icon-blue { color: #0d6efd; background: #e7f1ff; padding: 0.5rem; font-size: 1rem; border-radius: 8px; }
 .portfolio-value { font-size: 2rem; font-weight: bold; margin-bottom: 1rem; }
 .portfolio-item { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 1.5rem; }
@@ -499,4 +500,151 @@ figcaption {
 
 .negative {
     color: #ff4d4d; 
+}
+
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    display: flex;
+    align-items: center;
+    color: #555;
+    font-weight: 200;
+    font-size: 12px;
+}
+
+.info-label i {
+    margin-right: 10px;
+}
+
+.info-value {
+    color: #555;
+    font-weight: 200;
+    font-size: 12px;
+}
+
+.info-value a:hover {
+    text-decoration: underline;
+}
+
+
+/* detail saham */
+
+
+.stock-card {
+    background-color: #ffffff;
+    border: 1px solid #dfe1e6;
+    border-radius: 12px;
+    padding: 24px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    border-bottom: 1px solid #dfe1e6;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.long-name {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0;
+    color: #091e42;
+}
+
+.symbol {
+    font-size: 16px;
+    color: #6b778c;
+    margin: 4px 0 0;
+    text-align: left;
+}
+
+.price-section {
+    margin-bottom: 20px;
+}
+
+.current-price {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0;
+    color: #091e42;
+}
+
+.change {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 4px 0 0;
+}
+
+.change.up {
+    color: #00875a; /* Green for price up */
+}
+
+.change.down {
+    color: #de350b; /* Red for price down */
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.metric {
+    background-color: #fafbfd;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #dfe1e6;
+    text-align: left;
+}
+
+.metric .label {
+    font-size: 14px;
+    color: #6b778c;
+    margin: 0 0 4px;
+}
+
+.metric .value {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    color: #172b4d;
+}
+
+@media (max-width: 600px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stock-card {
+        padding: 16px;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+    }
+
+
+    .long-name {
+        font-size: 24px;
+    }
+
+    .current-price {
+        font-size: 40px;
+    }
+
+    .change {
+        font-size: 18px;
+    }
 }
