@@ -16,7 +16,7 @@ def custom_404(request, exception):
     return render(request, "home/404.html", status=404)
 
 def index(request):
-
+    
     # filter_published = {'status': 'published', 'created_at__lte': tanggal_now}
     all_articles = Article.objects.filter( status='published', created_at__lte=timezone.now() ).order_by('-created_at')
     headline_articles = Article.objects.filter(is_headline=True, status='published', created_at__lte=timezone.now()).order_by('-created_at')[:6]
@@ -24,7 +24,17 @@ def index(request):
     popular_articles = Article.objects.filter(status='published', created_at__lte=timezone.now()).order_by('-views_count')[:7]
     category_list_variabel = Category.objects.all()
     saham_healthcare = Saham.objects.filter(sektor="healthcare")
-
+    saham_basic_materials = Saham.objects.filter(sektor="basic materials")
+    sahan_financials = Saham.objects.filter(sektor="financials")
+    saham_transportation_logistic = Saham.objects.filter(sektor="transportation logistic")
+    saham_technology = Saham.objects.filter(sektor="technology")
+    saham_non_cyclicals = Saham.objects.filter(sektor="non cyclicals")
+    saham_industrials = Saham.objects.filter(sektor="industrials")
+    saham_energy = Saham.objects.filter(sektor="energy")
+    saham_cyclicals = Saham.objects.filter(sektor="cyclicals")
+    saham_infrastructures = Saham.objects.filter(sektor="infrastructures")
+    saham_properties = Saham.objects.filter(sektor="properties")
+    top_volumes = ( Saham.objects .filter(volume__isnull=False) .order_by('-volume')[:15] )
     paginator = Paginator(all_articles, 6)
     page = request.GET.get('page')
     
@@ -46,6 +56,17 @@ def index(request):
         'popular_articles': popular_articles,
         'category_list': category_list_variabel,
         'saham_healthcare': saham_healthcare,
+        'saham_basic_materials': saham_basic_materials,
+        'sahan_financials': sahan_financials,
+        'saham_transportation_logistic': saham_transportation_logistic,
+        'saham_technology': saham_technology,
+        'saham_non_cyclicals': saham_non_cyclicals,
+        'saham_industrials': saham_industrials,
+        'saham_energy': saham_energy,
+        'saham_cyclicals': saham_cyclicals,
+        'saham_infrastructures': saham_infrastructures,
+        'saham_properties': saham_properties,
+        'top_volumes': top_volumes,
     }
     return render(request,'home/index.html', context) 
 
