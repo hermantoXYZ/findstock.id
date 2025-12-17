@@ -8,7 +8,7 @@ from django.db.models import Count, Q
 from django.utils.text import slugify
 from app.forms_anggota import formUserRegisterAnggota
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.db.models import F, FloatField, ExpressionWrapper
 
 # tanggal_now = timezone.now()
 
@@ -34,7 +34,11 @@ def index(request):
     saham_cyclicals = Saham.objects.filter(sektor="cyclicals")
     saham_infrastructures = Saham.objects.filter(sektor="infrastructures")
     saham_properties = Saham.objects.filter(sektor="properties")
-    top_volumes = ( Saham.objects .filter(volume__isnull=False) .order_by('-volume')[:15] )
+    top_volumes = ( Saham.objects .filter(volume__isnull=False) .order_by('-volume')[:7] )
+    top_gainers = ( Saham.objects .filter(volume__isnull=False) .order_by('-change_pct')[:7] )
+    top_losers = ( Saham.objects .filter(change_pct__isnull=False) .order_by('change_pct')[:7])
+    top_saham = Saham.objects .filter(volume__isnull=False, market_cap__isnull=False) .order_by('-volume', '-market_cap')[:25] 
+    
     paginator = Paginator(all_articles, 6)
     page = request.GET.get('page')
     
@@ -67,6 +71,9 @@ def index(request):
         'saham_infrastructures': saham_infrastructures,
         'saham_properties': saham_properties,
         'top_volumes': top_volumes,
+        'top_saham': top_saham,
+        'top_gainers': top_gainers,
+        'top_losers': top_losers
     }
     return render(request,'home/index.html', context) 
 
@@ -241,6 +248,17 @@ def saham_detail(request, symbol):
     }
     return render(request, 'home/saham_detail.html', context)
 
+def devidends_list(request):
+    saham = Saham.objects.all().order_by('-volume')
+
+    for s in saham:
+            s.div_yield_percent = s.div_yield * 100 if s.div_yield else None
+
+    context = {
+        'title': 'Daftar Dividen Saham',
+        'sahams': saham,
+    }
+    return render(request, 'home/dividends_list.html', context)
 
 def loginView(request):
     context = {
@@ -305,3 +323,131 @@ def registerView(request):
         'heading': 'Register User Anggota',
     }
     return render(request, 'home/register.html', context)
+
+
+def saham_filter_view(request):
+    saham_list = Saham.objects.all()
+    
+    # Filter berdasarkan search (symbol atau nama)
+    search = request.GET.get('search', '')
+    if search:
+        saham_list = saham_list.filter(
+            Q(symbol__icontains=search) |
+            Q(short_name__icontains=search) |
+            Q(long_name__icontains=search)
+        )
+    
+    # Filter berdasarkan sektor
+    sektor = request.GET.get('sektor', '')
+    if sektor:
+        saham_list = saham_list.filter(sektor=sektor)
+    
+    # Filter berdasarkan papan pencatatan
+    papan = request.GET.get('papan', '')
+    if papan:
+        saham_list = saham_list.filter(papan_pencatatan=papan)
+    
+    # Filter harga
+    price_min = request.GET.get('price_min', '')
+    price_max = request.GET.get('price_max', '')
+    if price_min:
+        saham_list = saham_list.filter(price__gte=float(price_min))
+    if price_max:
+        saham_list = saham_list.filter(price__lte=float(price_max))
+    
+    # Filter perubahan harga
+    change_pct_min = request.GET.get('change_pct_min', '')
+    change_pct_max = request.GET.get('change_pct_max', '')
+    if change_pct_min:
+        saham_list = saham_list.filter(change_pct__gte=float(change_pct_min))
+    if change_pct_max:
+        saham_list = saham_list.filter(change_pct__lte=float(change_pct_max))
+    
+    # Filter market cap
+    market_cap_min = request.GET.get('market_cap_min', '')
+    market_cap_max = request.GET.get('market_cap_max', '')
+    if market_cap_min:
+        saham_list = saham_list.filter(market_cap__gte=int(market_cap_min))
+    if market_cap_max:
+        saham_list = saham_list.filter(market_cap__lte=int(market_cap_max))
+    
+    # Filter PE Ratio
+    pe_min = request.GET.get('pe_min', '')
+    pe_max = request.GET.get('pe_max', '')
+    if pe_min:
+        saham_list = saham_list.filter(pe__gte=float(pe_min))
+    if pe_max:
+        saham_list = saham_list.filter(pe__lte=float(pe_max))
+    
+    # Filter PBV
+    pbv_min = request.GET.get('pbv_min', '')
+    pbv_max = request.GET.get('pbv_max', '')
+    if pbv_min:
+        saham_list = saham_list.filter(pbv__gte=float(pbv_min))
+    if pbv_max:
+        saham_list = saham_list.filter(pbv__lte=float(pbv_max))
+    
+    # Filter dividend yield
+    div_yield_min = request.GET.get('div_yield_min', '')
+    div_yield_max = request.GET.get('div_yield_max', '')
+
+    if div_yield_min:
+        saham_list = saham_list.filter(
+            div_yield__gte=float(div_yield_min) / 100
+        )
+
+    if div_yield_max:
+        saham_list = saham_list.filter(
+            div_yield__lte=float(div_yield_max) / 100
+        )
+
+    saham_list = saham_list.annotate(
+        div_yield_display=ExpressionWrapper(
+            F('div_yield') * 100,
+            output_field=FloatField()
+        )
+    )
+
+    # Filter volume
+    volume_min = request.GET.get('volume_min', '')
+    volume_max = request.GET.get('volume_max', '')
+    if volume_min:
+        saham_list = saham_list.filter(volume__gte=int(volume_min))
+    if volume_max:
+        saham_list = saham_list.filter(volume__lte=int(volume_max))
+    
+    # Sorting
+    sort_by = request.GET.get('sort', '-price')
+    if sort_by:
+        saham_list = saham_list.order_by(sort_by)
+    
+    # Ambil daftar unik untuk dropdown filter
+    sektor_list = Saham.objects.values_list('sektor', flat=True).distinct().exclude(sektor__isnull=True)
+    papan_list = Saham.objects.values_list('papan_pencatatan', flat=True).distinct().exclude(papan_pencatatan__isnull=True)
+    
+    context = {
+        'saham_list': saham_list,
+        'sektor_list': sektor_list,
+        'papan_list': papan_list,
+        # Pertahankan nilai filter untuk form
+        'search': search,
+        'sektor': sektor,
+        'papan': papan,
+        'price_min': price_min,
+        'price_max': price_max,
+        'change_pct_min': change_pct_min,
+        'change_pct_max': change_pct_max,
+        'market_cap_min': market_cap_min,
+        'market_cap_max': market_cap_max,
+        'pe_min': pe_min,
+        'pe_max': pe_max,
+        'pbv_min': pbv_min,
+        'pbv_max': pbv_max,
+        'div_yield_min': div_yield_min,
+        'div_yield_max': div_yield_max,
+        'volume_min': volume_min,
+        'volume_max': volume_max,
+        'sort': sort_by,
+    }
+    
+    return render(request, 'home/saham.html', context)

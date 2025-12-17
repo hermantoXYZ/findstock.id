@@ -13,73 +13,48 @@
 {% endblock %}
 {% block content %}
     <div class="hero-section">
-        <div class="market-nav">
-            <a href="#" class="market-link active">US</a>
-            <a href="#" class="market-link">Europe</a>
-            <a href="#" class="market-link">Asia</a>
-            <a href="#" class="market-link">Currencies</a>
-            <a href="#" class="market-link active">Crypto</a>
-            <a href="#" class="market-link">Futures</a>
-        </div>
-    
-        <div class="ticker-container">
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Bitcoin (BTC / IDR)</span>
-                    <span class="ticker-price">1,544,931,905.60</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.67%</span>
-                    <span class="value">-10,449,363.90</span>
-                </div>
-            </div>
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Ether (ETH / IDR)</span>
-                    <span class="ticker-price">51,988,153.03</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.0092%</span>
-                    <span class="value">-269,204.68</span>
-                </div>
-            </div>
-            <div class="ticker-item up">
-                <div class="ticker-arrow"><i class="fas fa-arrow-up"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Solana (SOL / IDR)</span>
-                    <span class="ticker-price">2,361,060.3024</span>
-                </div>
-                <div class="ticker-change">
-                    <span classs="percent">+0.27%</span>
-                    <span class="value">+6,296.2828</span>
-                </div>
-            </div>
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">XRP (XRP / IDR)</span>
-                    <span class="ticker-price">36,956.7548</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.36%</span>
-                    <span class="value">-132.8669</span>
-                </div>
-            </div>
-            <div class="ticker-item down">
-                 <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Dogecoin (DOGE / IDR)</span>
-                    <span class="ticker-price">2,694.95</span>
-                </div>
-                 <div class="ticker-change">
-                    <span class="percent">-0.45%</span>
-                    <span class="value">-12.21</span>
-                </div>
-            </div>
-        </div>
+    <div class="ticker-container">
+    {% for item in top_saham %}
+    <a href="{% url 'saham_detail' item.symbol %}" class="ticker-link">
+        <div class="ticker-item 
+            {% if item.change_pct > 0 %}up
+            {% elif item.change_pct < 0 %}down
+            {% else %}flat{% endif %}">
 
+            <div class="ticker-arrow">
+                {% if item.change_pct > 0 %}
+                    <i class="fas fa-arrow-up"></i>
+                {% elif item.change_pct < 0 %}
+                    <i class="fas fa-arrow-down"></i>
+                {% else %}
+                    <i class="fas fa-minus"></i>
+                {% endif %}
+            </div>
+
+            <div class="ticker-info">
+                <span class="ticker-name">
+                    {{ item.short_name|truncatechars:10 }}
+                    ({{ item.symbol }})
+                </span>
+                <span class="ticker-price">
+                    {{ item.volume|intword }}
+                </span>
+            </div>
+
+            <div class="ticker-change">
+                <span class="percent">
+                    {% if item.change_pct > 0 %}+{% endif %}
+                    {{ item.change_pct|floatformat:2 }}%
+                </span>
+                <span class="value">
+                    {{ item.price|floatformat:2 }}
+                </span>
+            </div>
+
+        </div>
+    </a>
+    {% endfor %}
+</div>
 <form method="get" action="{% url 'article_list' %}" class="hero-search-container">
     <i class="fas fa-search search-icon-input"></i>
     <input type="text" name="search" placeholder="Search for stocks, ETFs and more" value="{{ search_query|default:'' }}">
@@ -87,6 +62,54 @@
 </div>
     <main class="content-area">
             <div class="main-content">
+<div class="recently-searched">
+    <h2>Sektor Basic Materials</h2>
+    <div class="discover-grid-container">
+        <button class="scroll-button left">
+            <span class="material-icons">chevron_left</span>
+        </button>
+        <div class="discover-grid">
+            {% for item in saham_basic_materials %}
+            <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
+                <div class="stock-card-name">
+                    {{ item.long_name|truncatechars:20 }}
+                </div>
+                <div class="stock-card-price {% if item.change_pct >= 0 %} positive {% else %} negative {% endif %}">
+                    {{ item.price }} ({{ item.change_pct|floatformat:2 }}%)
+                </div>       
+            </a>
+            {% endfor %}
+        </div>
+        <button class="scroll-button right">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+</div>
+<div class="recently-searched">
+    <h2>Sektor Financials</h2>
+    <div class="discover-grid-container">
+        <button class="scroll-button left">
+            <span class="material-icons">chevron_left</span>
+        </button>
+        <div class="discover-grid">
+            {% for item in sahan_financials %}
+            <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
+                <div class="stock-card-name">
+                    {{ item.long_name|truncatechars:20 }}
+                </div>
+                <div class="stock-card-price {% if item.change_pct >= 0 %} positive {% else %} negative {% endif %}">
+                    {{ item.price }} ({{ item.change_pct|floatformat:2 }}%)
+                </div>       
+            </a>
+            {% endfor %}
+        </div>
+        <button class="scroll-button right">
+            <span class="material-icons">chevron_right</span>
+        </button>
+    </div>
+</div>
                 <section class="top-movers">
                     <h2>Top movers in your lists</h2>
                     <div class="mover-item">
@@ -151,60 +174,6 @@
     </div>
 </div>
 
-
-<div class="recently-searched">
-    <h2>Sektor Basic Materials</h2>
-    <div class="discover-grid-container">
-        <button class="scroll-button left">
-            <span class="material-icons">chevron_left</span>
-        </button>
-        <div class="discover-grid">
-            {% for item in saham_basic_materials %}
-            <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
-                <div class="stock-card-name">
-                    {{ item.long_name|truncatechars:20 }}
-                </div>
-                <div class="stock-card-price {% if item.change_pct >= 0 %} positive {% else %} negative {% endif %}">
-                    {{ item.price }} ({{ item.change_pct|floatformat:2 }}%)
-                </div>       
-            </a>
-            {% endfor %}
-        </div>
-        <button class="scroll-button right">
-            <span class="material-icons">chevron_right</span>
-        </button>
-    </div>
-</div>
-
-
-
-<div class="recently-searched">
-    <h2>Sektor Financials</h2>
-    <div class="discover-grid-container">
-        <button class="scroll-button left">
-            <span class="material-icons">chevron_left</span>
-        </button>
-        <div class="discover-grid">
-            {% for item in sahan_financials %}
-            <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
-                <div class="stock-card-name">
-                    {{ item.long_name|truncatechars:20 }}
-                </div>
-                <div class="stock-card-price {% if item.change_pct >= 0 %} positive {% else %} negative {% endif %}">
-                    {{ item.price }} ({{ item.change_pct|floatformat:2 }}%)
-                </div>       
-            </a>
-            {% endfor %}
-        </div>
-        <button class="scroll-button right">
-            <span class="material-icons">chevron_right</span>
-        </button>
-    </div>
-</div>
-
-
 <div class="recently-searched">
     <h2>Sektor Transportation &amp; Logistics</h2>
     <div class="discover-grid-container">
@@ -214,7 +183,7 @@
         <div class="discover-grid">
             {% for item in saham_transportation_logistic %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -241,7 +210,7 @@
         <div class="discover-grid">
             {% for item in saham_technology %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -268,7 +237,7 @@
         <div class="discover-grid">
             {% for item in saham_non_cyclicals %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -296,7 +265,7 @@
         <div class="discover-grid">
             {% for item in saham_industrials %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -323,7 +292,7 @@
         <div class="discover-grid">
             {% for item in saham_energy %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -350,7 +319,7 @@
         <div class="discover-grid">
             {% for item in saham_cyclicals %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -377,7 +346,7 @@
         <div class="discover-grid">
             {% for item in saham_infrastructures %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -404,7 +373,7 @@
         <div class="discover-grid">
             {% for item in saham_properties %}
             <a href="{% url 'saham_detail' item.symbol %}" class="stock-card">    
-                <div class="stock-card-ticker index">{{ item.symbol }}</div>
+                <div class="stock-card-ticker {{ item.symbol|lower }}">{{ item.symbol }}</div>
                 <div class="stock-card-name">
                     {{ item.long_name|truncatechars:20 }}
                 </div>
@@ -419,80 +388,6 @@
         </button>
     </div>
 </div>
-
-
-
-
-
-
-                <div class="recently-searched">
-                <h2>Sektor Healthcare</h2>
-                <div class="discover-grid-container">
-                    <button class="scroll-button left"><span class="material-icons">chevron_left</span></button>
-                   
-                    <div class="ticker-container">
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Bitcoin (BTC / IDR)</span>
-                    <span class="ticker-price">1,544,931,905.60</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.67%</span>
-                    <span class="value">-10,449,363.90</span>
-                </div>
-            </div>
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Ether (ETH / IDR)</span>
-                    <span class="ticker-price">51,988,153.03</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.0092%</span>
-                    <span class="value">-269,204.68</span>
-                </div>
-            </div>
-            <div class="ticker-item up">
-                <div class="ticker-arrow"><i class="fas fa-arrow-up"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Solana (SOL / IDR)</span>
-                    <span class="ticker-price">2,361,060.3024</span>
-                </div>
-                <div class="ticker-change">
-                    <span classs="percent">+0.27%</span>
-                    <span class="value">+6,296.2828</span>
-                </div>
-            </div>
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">XRP (XRP / IDR)</span>
-                    <span class="ticker-price">36,956.7548</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.36%</span>
-                    <span class="value">-132.8669</span>
-                </div>
-            </div>
-            <div class="ticker-item down">
-                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
-                <div class="ticker-info">
-                    <span class="ticker-name">Dogecoin (DOGE / IDR)</span>
-                    <span class="ticker-price">2,694.95</span>
-                </div>
-                <div class="ticker-change">
-                    <span class="percent">-0.45%</span>
-                    <span class="value">-12.21</span>
-                </div>
-            </div>
-        </div>
-        <button class="scroll-button right"><span class="material-icons">chevron_right</span></button>
-                </div>
-            </div>
-
-
-            
             </div>
 
 
@@ -520,15 +415,27 @@
                 </div>
 
                 <div class="sidebar-card">
-                    <h4>Market trends</h4>
                     <div class="trend-filters">
-                        <button class="filter-chip"><i class="fas fa-chart-line"></i> Market indexes</button>
-                        <button class="filter-chip"><i class="fas fa-poll"></i> Most active</button>
-                        <button class="filter-chip"><i class="fas fa-arrow-up"></i> Gainers</button>
-                        <button class="filter-chip"><i class="fas fa-arrow-down"></i> Losers</button>
-                        <button class="filter-chip"><i class="fas fa-leaf"></i> Climate leaders</button>
-                        <button class="filter-chip"><i class="fas fa-coins"></i> Crypto</button>
-                        <button class="filter-chip"><i class="fas fa-dollar-sign"></i> Currencies</button>
+                        <a href="{% url 'devidends_list' %}" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> Devidends
+                        </a>
+                        <a href="/s/filter/?sort=-change_pct" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> Gainers
+                        </a>
+                        <a href="/s/filter/?sort=change_pct" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> Losers
+                        </a>
+                        <a href="/s/filter/?sort=-volume" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> Most Active
+                        </a>
+                        <a href="/s/filter/?sort=pe" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> PE
+                        </a>
+                        <a href="/s/filter/?sort=-div_yield" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> Deviden Yeilds
+                        </a>
+
+
                     </div>
                 </div>
 
@@ -560,80 +467,59 @@
     </div>
 
 
-            <div class="sidebar-card">
-                    <h4>Most followed on Google</h4>
-                    <div class="stock-item">
-            <div class="stock-left">
-                <div class="stock-ticker ticker-aapl">AAPL</div>
-                <div class="company-name">Apple Inc</div>
-                <div class="followers">3.71M following</div>
-            </div>
-            <div class="stock-right">
-                <div class="percentage">0.47%</div>
-                <button class="add-btn"></button>
-            </div>
-        </div>
-
+    <div class="sidebar-card">
+                    <h4>Top Gainers Stocks</h4>
+{% for item in top_gainers %}
         <div class="stock-item">
+            <a href="{% url 'saham_detail' item.symbol %}" class="stock-left-link">
             <div class="stock-left">
-                <div class="stock-ticker ticker-googl">GOOGL</div>
-                <div class="company-name">Alphabet Inc Class A</div>
-                <div class="followers">2.16M following</div>
+                <div class="stock-ticker ticker-aapl">{{ item.symbol }}</div>
+                <div class="company-name">{{ item.long_name }}</div>
+                <div class="followers">{{ item.volume|intword }}</div>
             </div>
-            <div class="stock-right">
-                <div class="percentage">0.07%</div>
-                <button class="add-btn"></button>
-            </div>
-        </div>
+        </a>
+    <div class="stock-right">
+    {% if item.change_pct > 0 %}
+        <div class="percentage positive">+{{ item.change_pct|floatformat:2 }}%</div>
+    {% elif item.change_pct < 0 %}
+        <div class="percentage negative">{{ item.change_pct|floatformat:2 }}%</div>
+    {% else %}
+        <div class="percentage neutral">{{ item.change_pct|floatformat:2 }}%</div>
+    {% endif %}
+</div>
 
-        <div class="stock-item">
-            <div class="stock-left">
-                <div class="stock-ticker ticker-msft">MSFT</div>
-                <div class="company-name">Microsoft Corp</div>
-                <div class="followers">1.84M following</div>
-            </div>
-            <div class="stock-right">
-                <div class="percentage">1.32%</div>
-                <button class="add-btn"></button>
-            </div>
         </div>
+{% endfor %}
 
-        <div class="stock-item">
-            <div class="stock-left">
-                <div class="stock-ticker ticker-amzn">AMZN</div>
-                <div class="company-name">Amazon.com Inc</div>
-                <div class="followers">1.74M following</div>
-            </div>
-            <div class="stock-right">
-                <div class="percentage">1.77%</div>
-                <button class="add-btn"></button>
-            </div>
-        </div>
 
-        <div class="stock-item">
-            <div class="stock-left">
-                <div class="stock-ticker ticker-meta">META</div>
-                <div class="company-name">Meta Platforms Inc</div>
-                <div class="followers">1.58M following</div>
-            </div>
-            <div class="stock-right">
-                <div class="percentage">2.26%</div>
-                <button class="add-btn"></button>
-            </div>
-        </div>
+    </div>
 
+      <div class="sidebar-card">
+                    <h4>Top Lossers Stocks</h4>
+{% for item in top_losers %}
         <div class="stock-item">
+            <a href="{% url 'saham_detail' item.symbol %}" class="stock-left-link">
             <div class="stock-left">
-                <div class="stock-ticker ticker-tsla">TSLA</div>
-                <div class="company-name">Tesla Inc</div>
-                <div class="followers">1.49M following</div>
+                <div class="stock-ticker ticker-aapl">{{ item.symbol }}</div>
+                <div class="company-name">{{ item.long_name }}</div>
+                <div class="followers">{{ item.volume|intword }}</div>
             </div>
-            <div class="stock-right">
-                <div class="percentage">0.84%</div>
-                <button class="add-btn"></button>
-            </div>
+        </a>
+    <div class="stock-right">
+    {% if item.change_pct > 0 %}
+        <div class="percentage positive">+{{ item.change_pct|floatformat:2 }}%</div>
+    {% elif item.change_pct < 0 %}
+        <div class="percentage negative">{{ item.change_pct|floatformat:2 }}%</div>
+    {% else %}
+        <div class="percentage neutral">{{ item.change_pct|floatformat:2 }}%</div>
+    {% endif %}
+</div>
+
         </div>
-                </div>
+{% endfor %}
+
+
+    </div>
             </aside>
     </main>
 {% endblock %}

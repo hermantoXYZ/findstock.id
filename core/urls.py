@@ -45,6 +45,8 @@ urlpatterns += (
     path('page/<slug:slug>/', views.page_detail, name='page_detail'),
     path('saham/<str:symbol>/', views.saham_detail, name='saham_detail'),
     path('kalkulator/investasi', views.kalkulator_investasi, name='kalkulator_investasi'),
+    path('markets/dividends/', views.devidends_list, name='devidends_list'),
+    path('s/filter/', views.saham_filter_view, name='saham_filter'),
 )
 
 

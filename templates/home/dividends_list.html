@@ -1,0 +1,290 @@
+
+{% extends 'home/base.html' %}
+{% load humanize %}
+{% block title %}{{ title }} - {{web_name}}{% endblock %}
+{% block meta %}
+    <meta name="description" content="{{ web_name }}">
+    <meta name="keywords" content="FindStock, Pasar Modal, Saham, ETF, Berita Investasi, Analisis Saham, Alat Investasi, Komunitas Investor, AI untuk Investasi">
+    <meta name="author" content="FindStock">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="google" content="notranslate">
+    <meta name="news_keywords" content="FindStock, Seputar Pasar Modal dan Investasi" />
+{% endblock %}
+{% block content %}
+    <div class="hero-section">
+        <div class="market-nav">
+            <a href="#" class="market-link active">US</a>
+            <a href="#" class="market-link">Europe</a>
+            <a href="#" class="market-link">Asia</a>
+            <a href="#" class="market-link">Currencies</a>
+            <a href="#" class="market-link active">Crypto</a>
+            <a href="#" class="market-link">Futures</a>
+        </div>
+    
+        <div class="ticker-container">
+            <div class="ticker-item down">
+                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Bitcoin (BTC / IDR)</span>
+                    <span class="ticker-price">1,544,931,905.60</span>
+                </div>
+                <div class="ticker-change">
+                    <span class="percent">-0.67%</span>
+                    <span class="value">-10,449,363.90</span>
+                </div>
+            </div>
+            <div class="ticker-item down">
+                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Ether (ETH / IDR)</span>
+                    <span class="ticker-price">51,988,153.03</span>
+                </div>
+                <div class="ticker-change">
+                    <span class="percent">-0.0092%</span>
+                    <span class="value">-269,204.68</span>
+                </div>
+            </div>
+            <div class="ticker-item up">
+                <div class="ticker-arrow"><i class="fas fa-arrow-up"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Solana (SOL / IDR)</span>
+                    <span class="ticker-price">2,361,060.3024</span>
+                </div>
+                <div class="ticker-change">
+                    <span classs="percent">+0.27%</span>
+                    <span class="value">+6,296.2828</span>
+                </div>
+            </div>
+            <div class="ticker-item down">
+                <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">XRP (XRP / IDR)</span>
+                    <span class="ticker-price">36,956.7548</span>
+                </div>
+                <div class="ticker-change">
+                    <span class="percent">-0.36%</span>
+                    <span class="value">-132.8669</span>
+                </div>
+            </div>
+            <div class="ticker-item down">
+                 <div class="ticker-arrow"><i class="fas fa-arrow-down"></i></div>
+                <div class="ticker-info">
+                    <span class="ticker-name">Dogecoin (DOGE / IDR)</span>
+                    <span class="ticker-price">2,694.95</span>
+                </div>
+                 <div class="ticker-change">
+                    <span class="percent">-0.45%</span>
+                    <span class="value">-12.21</span>
+                </div>
+            </div>
+        </div>
+<div class="hero-search-container">
+        <i class="fas fa-search search-icon-input"></i>
+        <input type="text" id="searchInput" placeholder="Cari emiten (misal: BBCA)...">
+    </div>
+</div>
+    <main class="content-area">
+            <div class="main-content">
+               <section class="top-movers">
+    <h2>Devidend Saham JKSE</h2>
+    <div id="stockList"> 
+        {% for item in sahams %}
+        
+        <a href="{% url 'saham_detail' item.symbol %}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 10px;">
+            
+            <div class="mover-item">
+                <span class="mover-tag"> {{ item.symbol }}</span>
+                <span class="mover-name">
+                    {% if item.long_name %}{{ item.long_name }}{% else %}{{ item.short_name }}{% endif %}
+                </span>
+                <span class="mover-price">{{ item.price }}</span>
+                <span class="mover-change-percent {% if item.div_yield_percent is None %} down {% else %} up {% endif %}">
+                    {{ item.div_yield_percent|default:"0.00"|floatformat:2 }}%
+                </span>
+
+                <span class="mover-action">
+                    {% if item.dividends.exists %}
+                        <i class="fas fa-check-circle text-success"></i>
+                    {% else %}
+                        <i class="fas fa-times-circle text-danger"></i>
+                    {% endif %}
+                </span>
+            </div>
+            
+        </a>
+        {% endfor %}
+    </div>
+</section>
+                
+            </div>
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-pie card-icon-blue"></i>
+                        <div class="card-title">
+                            <h4>Your portfolios</h4>
+                            <p>Only you can see this</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-value">Rp0</div>
+                    <div class="portfolio-item">
+                        <span>FronX</span>
+                        <span>Rp0</span>
+                        <span>0.00%</span>
+                    </div>
+                    <button class="btn-new-portfolio"><i class="fas fa-plus"></i> New portfolio</button>
+                </div>
+
+                <div class="sidebar-card">
+                    <div class="trend-filters">
+                        <a href="{% url 'devidends_list' %}" class="filter-chip">
+                            <i class="fas fa-chart-line"></i> Devidends
+                        </a>
+                        <button class="filter-chip"><i class="fas fa-poll"></i> Most active</button>
+                        <button class="filter-chip"><i class="fas fa-arrow-up"></i> Gainers</button>
+                        <button class="filter-chip"><i class="fas fa-arrow-down"></i> Losers</button>
+                        <button class="filter-chip"><i class="fas fa-leaf"></i> Climate leaders</button>
+                        <button class="filter-chip"><i class="fas fa-coins"></i> Crypto</button>
+                        <button class="filter-chip"><i class="fas fa-dollar-sign"></i> Currencies</button>
+                    </div>
+                </div>
+
+    <div class="sidebar-card">
+                    <h4>Top Volume Stocks</h4>
+{% for item in top_volumes %}
+        <div class="stock-item">
+            <a href="{% url 'saham_detail' item.symbol %}" class="stock-left-link">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-aapl">{{ item.symbol }}</div>
+                <div class="company-name">{{ item.long_name }}</div>
+                <div class="followers">{{ item.volume|intword }}</div>
+            </div>
+        </a>
+    <div class="stock-right">
+    {% if item.change_pct > 0 %}
+        <div class="percentage positive">+{{ item.change_pct|floatformat:2 }}%</div>
+    {% elif item.change_pct < 0 %}
+        <div class="percentage negative">{{ item.change_pct|floatformat:2 }}%</div>
+    {% else %}
+        <div class="percentage neutral">{{ item.change_pct|floatformat:2 }}%</div>
+    {% endif %}
+</div>
+
+        </div>
+{% endfor %}
+
+
+    </div>
+
+
+            <div class="sidebar-card">
+                    <h4>Most followed on Google</h4>
+                    <div class="stock-item">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-aapl">AAPL</div>
+                <div class="company-name">Apple Inc</div>
+                <div class="followers">3.71M following</div>
+            </div>
+            <div class="stock-right">
+                <div class="percentage">0.47%</div>
+                <button class="add-btn"></button>
+            </div>
+        </div>
+
+        <div class="stock-item">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-googl">GOOGL</div>
+                <div class="company-name">Alphabet Inc Class A</div>
+                <div class="followers">2.16M following</div>
+            </div>
+            <div class="stock-right">
+                <div class="percentage">0.07%</div>
+                <button class="add-btn"></button>
+            </div>
+        </div>
+
+        <div class="stock-item">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-msft">MSFT</div>
+                <div class="company-name">Microsoft Corp</div>
+                <div class="followers">1.84M following</div>
+            </div>
+            <div class="stock-right">
+                <div class="percentage">1.32%</div>
+                <button class="add-btn"></button>
+            </div>
+        </div>
+
+        <div class="stock-item">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-amzn">AMZN</div>
+                <div class="company-name">Amazon.com Inc</div>
+                <div class="followers">1.74M following</div>
+            </div>
+            <div class="stock-right">
+                <div class="percentage">1.77%</div>
+                <button class="add-btn"></button>
+            </div>
+        </div>
+
+        <div class="stock-item">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-meta">META</div>
+                <div class="company-name">Meta Platforms Inc</div>
+                <div class="followers">1.58M following</div>
+            </div>
+            <div class="stock-right">
+                <div class="percentage">2.26%</div>
+                <button class="add-btn"></button>
+            </div>
+        </div>
+
+        <div class="stock-item">
+            <div class="stock-left">
+                <div class="stock-ticker ticker-tsla">TSLA</div>
+                <div class="company-name">Tesla Inc</div>
+                <div class="followers">1.49M following</div>
+            </div>
+            <div class="stock-right">
+                <div class="percentage">0.84%</div>
+                <button class="add-btn"></button>
+            </div>
+        </div>
+                </div>
+            </aside>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const stockItems = document.querySelectorAll('.mover-item');
+            const noResultsMsg = document.getElementById('noResults');
+
+            searchInput.addEventListener('keyup', function(e) {
+                const term = e.target.value.toLowerCase();
+                let visibleCount = 0;
+
+                stockItems.forEach(function(item) {
+                    // Ambil teks dari simbol dan nama perusahaan
+                    const symbol = item.querySelector('.mover-tag').textContent.toLowerCase();
+                    const name = item.querySelector('.mover-name').textContent.toLowerCase();
+
+                    // Cek apakah ketikan user ada di dalam simbol ATAU nama
+                    if (symbol.includes(term) || name.includes(term)) {
+                        item.style.display = 'flex'; // Tampilkan (sesuaikan dengan css asli anda, mungkin 'flex' atau 'block')
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none'; // Sembunyikan
+                    }
+                });
+
+                // Tampilkan pesan jika tidak ada hasil
+                if (visibleCount === 0) {
+                    noResultsMsg.style.display = 'block';
+                } else {
+                    noResultsMsg.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}

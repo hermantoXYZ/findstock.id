@@ -199,12 +199,26 @@ section h2 {font-size: 1.5rem;margin-bottom: 1.5rem;text-align: left;}
 
 /* Top Movers */
 .top-movers { margin-bottom: 2rem; }
-.mover-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg-white); border-radius: 8px; border: 1px solid var(--border-color); }
+.mover-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 1rem; padding: 1rem; 
+    background: var(--bg-white); 
+    border-radius: 8px; 
+    margin-bottom: 1rem;
+    justify-content: space-between;
+    border: 1px solid var(--border-color); }
 .mover-tag { background-color: #0d6efd; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.9rem; }
 .mover-name { flex-grow: 1; font-weight: 500; }
+@media (max-width: 768px) {
+    .mover-name {
+        display: none;
+    }
+}
 .mover-price { font-weight: 500; }
 .mover-change-value { color: var(--up-color); }
 .mover-change-percent { background-color: #e6f7f0; color: var(--up-color); padding: 0.25rem 0.5rem; border-radius: 4px; display: flex; align-items: center; gap: 0.25rem; font-weight: 500; }
+.mover-change-percent.down { background-color: #fceded; color: var(--down-color); }
 .mover-action { color: #20c997; font-size: 1.25rem; }
 
 /* Financial News */
@@ -234,7 +248,13 @@ section h2 {font-size: 1.5rem;margin-bottom: 1.5rem;text-align: left;}
 
 /* Market Trends */
 .trend-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.filter-chip { background: none; border: 1px solid var(--border-color); color: var(--text-dark); padding: 0.5rem 0.75rem; border-radius: 16px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
+.filter-chip { 
+    background: none; 
+    border: 1px solid var(--border-color); 
+    color: var(--text-dark); padding: 0.5rem 0.75rem; 
+    border-radius: 16px; cursor: pointer; display: flex; 
+    font-size: 12px;
+    align-items: center; gap: 0.5rem; transition: all 0.2s; }
 .filter-chip:hover { background-color: #f1f3f4; }
 .filter-chip i { color: var(--text-light); }
 
@@ -395,6 +415,13 @@ figcaption {
     margin-left: 20px;
 }
 
+.text-success {
+    color: #1dbf4f; 
+}
+.text-danger {
+    color: #ff4d4d; 
+}
+
 
 .discover-grid-container {
     position: relative;
@@ -430,13 +457,6 @@ figcaption {
     display: inline-block;
     margin-bottom: 8px;
 }
-
-.index { background-color: #e8eaed; color: #202124; }
-.asri { background-color: #4285f4; color: #fff; }
-.asii { background-color: #4285f4; color: #fff; }
-.elsa { background-color: #d93025; color: #fff; }
-.bmri { background-color: #fbbc04; color: #000; }
-
 
 .stock-card-name {
     font-size: 12px;
@@ -1278,3 +1298,21 @@ figcaption {
             color: #6b7280;
             font-weight: 300;
         }
+
+
+.noted {
+    margin-top: 20px;            
+    padding: 15px;          
+    background-color: #f8f9fa;  
+    border-left: 4px solid #3b82f6; 
+    color: #4b5563;           
+    font-size: 0.9rem;          
+    border-radius: 4px;        
+    line-height: 1.5;            
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+}
+
+.noted strong {
+    color: #1f2937;             
+    font-weight: 600;
+}

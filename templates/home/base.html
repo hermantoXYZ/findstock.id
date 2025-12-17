@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'home.css' %}?v={{ STATIC_VERSION }}">
+<link rel="stylesheet" href="{% static 'stocks.css' %}?v={{ STATIC_VERSION }}">
 <link rel="apple-touch-icon" sizes="180x180" href="/media/logo/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/media/logo/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/media/logo/favicon-16x16.png">
@@ -30,14 +31,40 @@
                 </div>
                 <ul class="nav-menu">
                     <li class="nav-item dropdown" id="product-nav-item">
-                        <a href="#" class="nav-link product-link">Product <i class="fas fa-chevron-down"></i></a>
-                        <ul class="mobile-submenu">
-                            <li><a href="#">Stock</a></li>
-                            <li><a href="#">Mutual Fund</a></li>
-                            <li><a href="#">Bond</a></li>
-                            <li><a href="#">Sharia</a></li>
-                            <li><a href="#">Margin</a></li>
-                        </ul>
+                        <a href="#" class="nav-link product-link">Sectors<i class="fas fa-chevron-down"></i></a>
+                    <ul class="mobile-submenu">
+                        <li>
+                            <a href="/s/filter/?sektor=basic+materials">Basic Materials</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=financials">Financials</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=transportation+logistic">Transportation</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=technology">Technology</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=financials">Non-Cyclicals</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=industrials">Industrials</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=energy">Energy</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=cyclicals">Cyclicals</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=infrastructures">Infrastructures</a>
+                        </li>
+                        <li>
+                            <a href="/s/filter/?sektor=properties">Properties</a>
+                        </li>
+                    </ul>
+
                     </li>
                     <li class="nav-item"><a href="/insights" class="nav-link">Insights</a></li>
                     <li class="nav-item"><a href="/news" class="nav-link">News</a></li>
@@ -88,6 +115,18 @@
         </div>
     </div>
     {% block content %}{% endblock %}
+        <div class="market-nav">
+            <a href="/s/filter/?sektor=financials" class="market-link active">Financials</a>
+            <a href="/s/filter/?sektor=transportation+logistic" class="market-link">Transportation</a>
+            <a href="/s/filter/?sektor=technology" class="market-link">Technology</a>
+            <a href="/s/filter/?sektor=financials" class="market-link">Non-Cyclicals</a>
+            <a href="/s/filter/?sektor=cyclicals" class="market-link">Cyclicals</a>
+            <a href="/s/filter/?sektor=industrials" class="market-link active">Industrials</a>
+            <a href="/s/filter/?sektor=energy" class="market-link">Energy</a>
+            <a href="/s/filter/?sektor=basic+materials" class="market-link">Basic Materials</a>
+            <a href="/s/filter/?sektor=infrastructures" class="market-link">Infrastructures</a>
+            <a href="/s/filter/?sektor=properties" class="market-link">Properties</a>
+        </div>
     <footer class="site-footer-container">
         <div class="site-footer-main">
             <div class="footer-about">

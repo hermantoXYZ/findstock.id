@@ -24,6 +24,7 @@
 <meta name="twitter:image" content="https://findstock.id{{ article.featured_image.url }}">
 
 <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 {% endblock %}
 {% block content %}
@@ -103,7 +104,7 @@
                                     <th>Pay Date</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="dividendTable">
                                 {% for dividend in dividends %}
                                 <tr>
                                     <td class="year-cell">{{ dividend.period }}</td>
@@ -117,7 +118,15 @@
                                 </tr> 
                                 {% endfor %}
                             </tbody>
-                        </table>
+                        </table> 
+                        <div id="dividendChartWrapper" style="width:100%; margin:20px 0; display:none;">
+    <canvas id="dividendChart"></canvas>
+</div>
+                        <div class="noted">
+                            <strong>Catatan:</strong> 
+                            Dividen merupakan pembagian keuntungan yang diberikan perusahaan dan berasal dari keuntungan yang dihasilkan perusahaan. Dividen diberikan setelah mendapat persetujuan dari pemegang saham dalam RUPS. Jika seorang pemodal ingin mendapatkan dividen, maka pemodal tersebut harus memegang saham tersebut dalam kurun waktu yang relatif lama yaitu hingga kepemilikan saham tersebut berada dalam periode dimana diakui sebagai pemegang saham yang berhak mendapatkan dividen.</br></br>
+                            Dividen yang dibagikan perusahaan dapat berupa dividen tunai – artinya kepada setiap pemegang saham diberikan dividen berupa uang tunai dalam jumlah rupiah tertentu untuk setiap saham - atau dapat pula berupa dividen saham yang berarti kepada setiap pemegang saham diberikan dividen sejumlah saham sehingga jumlah saham yang dimiliki seorang pemodal akan bertambah dengan adanya pembagian dividen saham tersebut.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -662,6 +671,10 @@
                     <span class="mover-action"><i class="fas fa-check-circle"></i></span>
                 </div>
                 </section>
+
+                <div class="noted">
+                           Developed by <strong>A.Hermanto</strong> diupdate secara berkala berdasarkan laporan keuangan perusahaan yang dipublikasikan. Tidak merupakan rekomendasi pembelian atau penjualan saham. Gunakan informasi ini sebagai bahan pertimbangan investasi.
+                </div>
             </div>
 
             <aside class="sidebar">
@@ -703,7 +716,9 @@
                 <div class="sidebar-card">
                     <h4>Market trends</h4>
                     <div class="trend-filters">
-                        <button class="filter-chip"><i class="fas fa-chart-line"></i> Market indexes</button>
+                    <a href="{% url 'devidends_list' %}" class="filter-chip">
+                                        <i class="fas fa-chart-line"></i> Devidends
+                                    </a>
                         <button class="filter-chip"><i class="fas fa-poll"></i> Most active</button>
                         <button class="filter-chip"><i class="fas fa-arrow-up"></i> Gainers</button>
                         <button class="filter-chip"><i class="fas fa-arrow-down"></i> Losers</button>
@@ -712,7 +727,7 @@
                         <button class="filter-chip"><i class="fas fa-dollar-sign"></i> Currencies</button>
                     </div>
                 </div>
-                 <div class="sidebar-card">
+                <div class="sidebar-card">
                     <h4>Top Volume Stocks</h4>
 {% for item in top_volumes %}
         <div class="stock-item">
@@ -762,5 +777,55 @@
             content.classList.toggle('active');
             arrow.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
         }
-    </script>
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const rows = document.querySelectorAll('#dividendTable tr');
+    const labels = [];
+    const values = [];
+
+    rows.forEach(row => {
+        const year = row.querySelector('.year-cell');
+        const dividend = row.querySelector('.value-cell');
+
+        if (year && dividend) {
+            labels.push(year.textContent.trim());
+            values.push(parseFloat(dividend.textContent.replace(',', '')));
+        }
+    });
+
+    // Jika tidak ada data, jangan buat chart
+    if (labels.length === 0) {
+        console.log('Tidak ada data dividend');
+        return;
+    }
+
+    document.getElementById('dividendChartWrapper').style.display = 'block';
+
+    const ctx = document.getElementById('dividendChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Dividend',
+                data: values
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+});
+</script>
+
 {% endblock %}
